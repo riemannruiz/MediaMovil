@@ -2,19 +2,13 @@
 """
 Archivo de importación de datos para Medias móviles. 
 """
-#%%
+#%% Importar librerías. 
 from mylib import mylib
 import time as _time
 import datetime
-import requests
-import pandas as pd
-import re
-import string
 
 yahooKeyStats = mylib.yahooKeyStats
-#%%
-
-
+#%% Descargar datos históricos. 
 #stock = ['AC.MX','ALFAA.MX','ALPEKA.MX','ALSEA.MX','ELEKTRA.MX','IENOVA.MX','MEXCHEM.MX','PE&OLES.MX','PINFRA.MX','WALMEX.MX']
 stock = ['AMXL.MX','WALMEX.MX','FEMSAUBD.MX','TLEVISACPO.MX','GMEXICOB.MX','GFNORTEO.MX','CEMEXCPO.MX','ALFAA.MX','PE&OLES.MX','GFINBURO.MX','ELEKTRA.MX','MEXCHEM.MX','BIMBOA.MX','AC.MX','KIMBERA.MX','LABB.MX','LIVEPOL1.MX','ASURB.MX','GAPB.MX','ALPEKA.MX','GRUMAB.MX','ALSEA.MX','GCARSOA1.MX','LALAB.MX','IENOVA.MX','PINFRA.MX',]
 
