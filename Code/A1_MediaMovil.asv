@@ -42,17 +42,9 @@ rclose = struct2cell(rend);
 mat_rclose = zeros(size(prices.AC,1)-1,n);
 
 for i=1:n 
-    mat_rclose(:,i) = rclose{i};
+    mat_rclose(:,i) = rclose{i}
 end
 %% 
-cov_rclose = cov(mat_rclose);
-W = ones(n,1)/n;
-
-
-Mean = mean(mean(mat_rclose))*252
-Std = ((W'*(cov_rclose*W))*252)^0.5
-
-
-
+ 
 
 
