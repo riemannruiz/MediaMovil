@@ -1,27 +1,25 @@
 %% Descargar Bases de datos (csv)
 % stock = {'AMXL'; 'WALMEX'; 'TLEVISACPO'; 'GMEXICOB'; 'GFNORTEO'; 'CEMEXCPO'; 'ALFAA'; 'PENOLES'; 'GFINBURO'; 'ELEKTRA'; 'BIMBOA'; 'AC'; 'KIMBERA'; 'LABB'; 'LIVEPOL1'; 'ASURB'; 'GAPB'; 'ALPEKA'; 'GRUMAB'; 'ALSEA'; 'GCARSOA1';  'PINFRA'};
-stock = {'AC';'ALFAA';'ALPEKA';'ALSEA';'ELEKTRA';'IENOVA';'MEXCHEM';'PENOLES';'PINFRA';'WALMEX'};
+stock = {'AC','ALFAA','ALPEKA','ALSEA','ELEKTRA','IENOVA','MEXCHEM','PE&OLES','PINFRA','WALMEX'}
 
-n = size(stock,1);
-
-% hoy = datestr(date,29);
-% inicio = datestr(datenum('18-Dic-2013'),29);
-% for i=1:n
-%     txt = sprintf('writetable(Download(''%s.mx'',inicio,hoy,''d'',''history''),''../data/%s.MX.csv'')',lower(stock{i}),stock{i})
-%     eval(txt) % Importa base de datos csv a formato de tablas y los guarda todas en una estructura 'struct' 
-% end
-
+hoy = datestr(date,29);
+inicio = datestr(datenum('18-Dic-2013'),29);
+for i=1:n
+    txt = sprintf('writetable(Download(''grumab.mx'',inicio,hoy,''d'',''history''))',stock{i});
+    eval(txt) % Importa base de datos csv a formato de tablas y los guarda todas en una estructura 'struct' 
+end
+(Download('grumab.mx',inicio,hoy,'d','history'));
 
 %% Importar Bases de datos (csv)
 
-% 
-% 
-% for i=1:n
-%     txt = sprintf('prices.%s = readtable(''../data/%s.MX.csv'',''ReadVariableNames'',true)',stock{i},stock{i});
-%     eval(txt) % Importa base de datos csv a formato de tablas y los guarda todas en una estructura 'struct' 
-% end
-% 
-% save prices.mat prices
+n = size(stock,1);
+
+for i=1:n
+    txt = sprintf('prices.%s =  readtable(''../data/%s.MX.csv'',''ReadVariableNames'',true)',stock{i},stock{i});
+    eval(txt) % Importa base de datos csv a formato de tablas y los guarda todas en una estructura 'struct' 
+end
+
+save prices.mat prices
 
 load prices.mat
 
@@ -29,8 +27,8 @@ load prices.mat
 %% Cambiar 'null' por el numero anterior
 % m = size(prices.ALFAA.High,1);
 % for j = 2:7 
-% 
-% 
+
+
 %     for k = 2:m
 %         if length(prices.ALFAA{k,j}{1})==4
 %             prices.ALFAA{k,j}{1} = prices.ALFAA{k-1,j}{1};
@@ -42,7 +40,7 @@ load prices.mat
 % prices.ALFAA.Low = str2num(cell2mat(prices.ALFAA{:,4}));
 % prices.ALFAA.Close = str2num(cell2mat(prices.ALFAA{:,5}));
 % prices.ALFAA.AdjClose = str2num(cell2mat(prices.ALFAA{:,6}));
-%prices.ALFAA.Volume = str2num(cell2mat(prices.ALFAA{:,7}));
+% %prices.ALFAA.Volume = str2num(cell2mat(prices.ALFAA{:,7}));
 
 %% Calcular rendimientos de Cierres. 
 
