@@ -13,6 +13,17 @@ n = size(stock,1);
 load prices.mat
 
 %% Cambiar 'null' por el numero anterior
+
+[n,m] = size(prices.ALFAA.High);
+for j = 2:7 
+    for k = 2:n
+        if length(prices.ALFAA{:,j})==4
+            prices.ALFAA.High{k} = prices.ALFAA.High{k-1};
+        end
+    end
+end
+
+
 % m = size(prices.ALFAA.High,1);
 % for j = 2:7 
 
@@ -29,6 +40,7 @@ load prices.mat
 % prices.ALFAA.AdjClose = str2num(cell2mat(prices.ALFAA{:,6}));
 % %prices.ALFAA.Volume = str2num(cell2mat(prices.ALFAA{:,7}));
 
+
 %% Calcular rendimientos de Cierres. 
 
 rend = [];
@@ -36,6 +48,7 @@ for i=1:n
     x = eval(sprintf('prices.%s.Close',stock{i}));
     eval(sprintf('rend.%s = diff(x)./x(1:end-1,:)',stock{i}));
 end
+
 
 
 rclose = struct2cell(rend);
@@ -46,5 +59,6 @@ for i=1:n
 end
 %% 
  
+
 
 
