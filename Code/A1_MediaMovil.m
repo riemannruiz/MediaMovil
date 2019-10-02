@@ -12,9 +12,12 @@ n = size(stock,1);
 
 load prices.mat
 
-% %% Cambiar 'null' por el numero anterior
+
+%% Cambiar 'null' por el numero anterior
 % m = size(prices.ALFAA.High,1);
 % for j = 2:7 
+
+
 %     for k = 2:m
 %         if length(prices.ALFAA{k,j}{1})==4
 %             prices.ALFAA{k,j}{1} = prices.ALFAA{k-1,j}{1};
@@ -35,6 +38,21 @@ for i=1:n-1
     x = eval(sprintf('prices.%s.Close',stock{i}));
     eval(sprintf('rend.%s = diff(x)./x(1:end-1,:)',stock{i}));
 end
+
+
+rclose = struct2cell(rend);
+mat_rclose = zeros(size(prices.AC,1)-1,n);
+
+for i=1:n 
+    mat_rclose(:,i) = rclose{i};
+end
+%% 
+cov_rclose = cov(mat_rclose);
+W = ones(n,1)/n;
+
+
+Mean = mean(mean(mat_rclose))*252
+Std = ((W'*(cov_rclose*W))*252)^0.5
 
 
 
