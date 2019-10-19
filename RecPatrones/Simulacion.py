@@ -352,9 +352,13 @@ class Genetico:
             
             # Se escogen los padres.
             decisiones = np.concatenate((decisiones,padres)) # agregamos los 'padres' de las nuevas generaciones a la lista. 
-            padres = decisiones[np.argsort(punt)[-int(n_vec//4):]] # se escojen los padres
-            pct_mean[-int(n_vec//4):] = pmr[np.argsort(punt)[-int(n_vec//4):]] # se guarda la media que obtuvieron los padres  
-            pct_std[-int(n_vec//4):] = psr[np.argsort(punt)[-int(n_vec//4):]] # se guarda la desviación que obtuvieron los padres 
+            indx = np.argsort(punt)[-int(n_vec//4):] # Indice donde se encuentran los mejores padres
+            padres = decisiones[indx] # se escojen los padres
+            pct_mean[-int(n_vec//4):] = pct_mean[indx] # se guarda la media que obtuvieron los padres  
+            pct_std[-int(n_vec//4):] = pct_std[indx] # se guarda la desviación que obtuvieron los padres 
+            
+            
+            
             
             hist_mean[cic,:] = pmr #se almacena el promedio de los padres para observar avance generacional
             hist_std[cic,:] = psr
