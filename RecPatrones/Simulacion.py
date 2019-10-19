@@ -332,7 +332,12 @@ class Genetico:
         pct_mean = np.zeros(punt.shape)
         pct_std = np.zeros(punt.shape)
         
+        pct_mean = np.zeros(punt.shape)
+        pct_std = np.zeros(punt.shape)
+
+
         for cic in range(iteraciones):  
+            t2 = time()
             for i in np.arange(n_vec): ## se simulan todos vectores de decisión para escoger el que de la suma mayor
                 
                 #######################################################################
@@ -344,11 +349,7 @@ class Genetico:
                 #######################################################################
             
             # Se da una calificación a cada vector de toma de decisiones.
-            pmr = pct_mean # pct_mean no estandarizado se respalda
-            psr = pct_std # pct_std no estandarizado se respalda
-            pct_mean = (pct_mean-pct_mean.mean())/pct_mean.std() # pct_mean estandarizado 
-            pct_std = (pct_std-pct_std.mean())/pct_std.std() # pct_std estandarizado
-            punt = pct_mean-pct_std*C # Se le da una calificación 
+            punt = pct_mean-pct_std*C # Se le da una calificación (Vector de calificaciones)
             
             # Se escogen los padres.
             decisiones = np.concatenate((decisiones,padres)) # agregamos los 'padres' de las nuevas generaciones a la lista. 
@@ -357,11 +358,8 @@ class Genetico:
             pct_mean[-int(n_vec//4):] = pct_mean[indx] # se guarda la media que obtuvieron los padres  
             pct_std[-int(n_vec//4):] = pct_std[indx] # se guarda la desviación que obtuvieron los padres 
             
-            
-            
-            
-            hist_mean[cic,:] = pmr #se almacena el promedio de los padres para observar avance generacional
-            hist_std[cic,:] = psr
+            hist_mean[cic,:] = pct_mean #se almacena el promedio de los padres para observar avance generacional
+            hist_std[cic,:] = pct_std
             hist_cal[cic,:] = punt
             
             # Se mutan los vectores de toma de decisiones
@@ -370,13 +368,15 @@ class Genetico:
                 for i in range(int(l_vec//4)):
                     decisiones[k][np.random.randint(0,l_vec)] = np.random.randint(0,3)-1
                   
-            # Para imprimir el proceso del algoritmo genérico en relación al total por simular.    
-            print(np.ceil((1+cic)/iteraciones*1000)/10)
-        
+            # Para imprimir el proceso del algoritmo genérico en relación al total por simular y el tiempo de cada iteracion.    
+            print((np.ceil((1+cic)/iteraciones*1000)/10,time()-t2)
+            
             # Cada 10 iteraciones se guardan los resultados de las simulaciones en un respaldo. 
-            if cic % 10 == 0: 
+            resp = 1 #respaldo a cada resp
+            if cic % resp == 0: 
                 hist_padres.append(padres)
-                pickle.dump([padres,hist_mean,hist_std,hist_cal,hist_padres],open('tmp.sav','wb'))
+                pickle.dump([punt,padres,hist_mean,hist_std,hist_cal,hist_padres],open('tmp.sav','wb'))
+            
             
         print(padres)
         print('tiempo de ejecución en seg.:')
