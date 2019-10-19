@@ -349,7 +349,8 @@ class Genetico:
                 #######################################################################
             
             # Se da una calificación a cada vector de toma de decisiones.
-            punt = pct_mean-pct_std*C # Se le da una calificación (Vector de calificaciones)
+            punt[pct_mean<pct_std] = pct_mean[pct_std>pct_mean]/pct_std[pct_std>pct_mean]
+#            punt = pct_mean-pct_std*C # Se le da una calificación (Vector de calificaciones)
             
             # Se escogen los padres.
             decisiones = np.concatenate((decisiones,padres)) # agregamos los 'padres' de las nuevas generaciones a la lista. 
@@ -372,7 +373,7 @@ class Genetico:
             print((np.ceil((1+cic)/iteraciones*1000)/10,time()-t2))
             
             # Cada 10 iteraciones se guardan los resultados de las simulaciones en un respaldo. 
-            resp = 1 #respaldo a cada resp
+            resp = 10 #respaldo a cada resp
             if cic % resp == 0: 
                 hist_padres.append(padres)
                 pickle.dump([punt,padres,hist_mean,hist_std,hist_cal,hist_padres],open('tmp.sav','wb'))

@@ -39,29 +39,30 @@ nombre = 'model_close'
 model_close = pickle.load(open('model_close.sav','rb'))
 
 #%% Se crea vector de toma de decisiones para futuro uso
-Ud = np.random.randint(-1,2,len(model_close)**len(ndias))
+#Ud = np.random.randint(-1,2,len(model_close)**len(ndias))
 
 #%%############################################################################
 ######################  Simulación para optimización ##########################
 ###############################################################################
 
 #%% Simulamos
-Vp = simulacion(csv,ndias,model_close,Ud)
+#Vp = simulacion(csv,ndias,model_close,Ud)
 
 
 #%% Calculamos y graficamos algunos datos sobre el desempeño general
-Rend =  np.diff(Vp) / Vp[:,:-1] #Rendimientos diarios.
-Port = Rend.mean(axis=0) #Creamos un portafolio con la misma cantidad de dinero en cada activo. 
-Mean = Port.mean() #Se calcula el rendimiento esperado del portafolio y la estrategia aplicada
-Std = Port.std() #Se calcula la volatilidad diaria
-plt.scatter((Std*252)**0.5,Mean*252) #Se grafica la volatilidad anual contra el rendimiento anual. 
+#Rend =  np.diff(Vp) / Vp[:,:-1] #Rendimientos diarios.
+#Port = Rend.mean(axis=0) #Creamos un portafolio con la misma cantidad de dinero en cada activo. 
+#Mean = Port.mean() #Se calcula el rendimiento esperado del portafolio y la estrategia aplicada
+#Std = Port.std() #Se calcula la volatilidad diaria
+#plt.scatter((Std*252)**0.5,Mean*252) #Se grafica la volatilidad anual contra el rendimiento anual. 
 
 #%%############################################################################
 #########################  Simulación para Graficar ###########################
 ###############################################################################
 
 #%% graficamos todas las simulaciones
-Sim = grafico(csv,ndias,model_close,Ud)
+#Sim = grafico(csv,ndias,model_close,Ud)
+#Sim = grafico(csv,ndias,model_close,padres[-1])
 
 #%%############################################################################
 ###################  Optimización por algorigmo genético ######################
@@ -71,12 +72,22 @@ Sim = grafico(csv,ndias,model_close,Ud)
 
 l_vec = len(model_close)**len(ndias) # longitud de cada vector de toma de decisiones
 n_vec = 32 # cantidad de vectores de toma de decisiones por generacion en potencias de 2. 
-iteraciones = 5
-C = 0.5
-nombre = 'prueba'
+iteraciones = 200
+C = 1 # aumenta o disminuye la pena a la volatilidad cuando se utiliza J = mean-C*std. C tiene que ser > 0
+nombre = 'Intento1'
 #####genetico(func,csv,ndias,model_close,l_vec,l_dec,iteraciones,C)
 genetico(simulacion,csv,ndias,model_close,l_vec,n_vec,iteraciones,C,nombre)
 
 #%%
 [punt,padres,hist_mean,hist_std,hist_cal,hist_padres] = pickle.load(open(nombre + '.sav','rb'))
+
+#%%
+fig = plt.figure()
+plt.plot(hist_cal)
+plt.show()
+#%%
+fig = plt.figure()
+plt.plot(hist_std[-1],hist_mean[-1],'k.')
+plt.show()
+
 
