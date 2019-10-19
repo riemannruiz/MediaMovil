@@ -47,6 +47,9 @@ Ud = np.random.randint(-1,2,len(model_close)**len(ndias))
 
 #%% Simulamos
 Vp = simulacion(csv,ndias,model_close,Ud)
+
+
+#%% Calculamos y graficamos algunos datos sobre el desempeño general
 Rend =  np.diff(Vp) / Vp[:,:-1] #Rendimientos diarios.
 Port = Rend.mean(axis=0) #Creamos un portafolio con la misma cantidad de dinero en cada activo. 
 Mean = Port.mean() #Se calcula el rendimiento esperado del portafolio y la estrategia aplicada
@@ -65,14 +68,9 @@ Sim = grafico(csv,ndias,model_close,Ud)
 ###############################################################################
 
 #%% Simulamos
-csv = ['AMXL.MX','WALMEX.MX','TLEVISACPO.MX']
-for i in np.arange(len(csv)):
-    csv[i] = '../Data/%s.csv'%csv[i]
-
-
 
 l_vec = len(model_close)**len(ndias) # longitud de cada vector de toma de decisiones
-n_vec = 4 # cantidad de vectores de toma de decisiones por generacion en potencias de 2. 
+n_vec = 32 # cantidad de vectores de toma de decisiones por generacion en potencias de 2. 
 iteraciones = 5
 C = 0.5
 nombre = 'prueba'

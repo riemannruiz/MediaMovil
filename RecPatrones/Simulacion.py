@@ -369,7 +369,7 @@ class Genetico:
                     decisiones[k][np.random.randint(0,l_vec)] = np.random.randint(0,3)-1
                   
             # Para imprimir el proceso del algoritmo genérico en relación al total por simular y el tiempo de cada iteracion.    
-            print((np.ceil((1+cic)/iteraciones*1000)/10,time()-t2)
+            print((np.ceil((1+cic)/iteraciones*1000)/10,time()-t2))
             
             # Cada 10 iteraciones se guardan los resultados de las simulaciones en un respaldo. 
             resp = 1 #respaldo a cada resp
@@ -378,7 +378,6 @@ class Genetico:
                 pickle.dump([punt,padres,hist_mean,hist_std,hist_cal,hist_padres],open('tmp.sav','wb'))
             
             
-        print(padres)
         print('tiempo de ejecución en seg.:')
         print(time()-t1)
         
