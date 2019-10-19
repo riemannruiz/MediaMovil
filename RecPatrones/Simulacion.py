@@ -320,17 +320,17 @@ class Genetico:
         t1 = time()        
         decisiones = np.random.randint(-1,2,(n_vec,l_vec)) # Inicial. 
         
-        hist_m = np.zeros((iteraciones,n_vec//4*5)) # historial de media
-        hist_s = np.zeros((iteraciones,n_vec//4*5)) # historial de desviación estandar
-        hist_a = np.zeros((iteraciones,n_vec//4*5)) # historial de calificaciones
-        m_hist = []
+        hist_mean = np.zeros((iteraciones,n_vec//4*5)) # historial de media
+        hist_std = np.zeros((iteraciones,n_vec//4*5)) # historial de desviación estandar
+        hist_cal = np.zeros((iteraciones,n_vec//4*5)) # historial de calificaciones
+        hist_padres = []
         
-        a = np.zeros(n_vec//4*5) # puntuaciones de hijos, se sobre-escribe en cada ciclo
-        m = np.zeros((n_vec//4,l_vec)) # padres, se sobre-escribe en cada ciclo
+        punt = np.zeros(n_vec//4*5) # puntuaciones de hijos, se sobre-escribe en cada ciclo
+        padres = np.zeros((n_vec//4,l_vec)) # padres, se sobre-escribe en cada ciclo
         
         #Para castigar y premiar baja desviación de rendimientos. 
-        pct_mean = np.zeros(a.shape)
-        pct_std = np.zeros(a.shape)
+        pct_mean = np.zeros(punt.shape)
+        pct_std = np.zeros(punt.shape)
         
         for cic in range(iteraciones):  
             for i in np.arange(n_vec): ## se simulan todos vectores de decisión para escoger el que de la suma mayor
@@ -338,6 +338,7 @@ class Genetico:
                 #######################################################################
                 Sim = func(csv,ndias,model_close,decisiones[i]) #########################
                 pct = Sim[:,1:]/Sim[:,:-1]-1 ##########################################
+                pct = pct.mean(axis=0) ##############################################
                 pct_mean[i] = pct.mean() ########################################## todas las empresas
                 pct_std[i] = pct.std() ############################################
                 #######################################################################
@@ -347,20 +348,20 @@ class Genetico:
             psr = pct_std # pct_std no estandarizado se respalda
             pct_mean = (pct_mean-pct_mean.mean())/pct_mean.std() # pct_mean estandarizado 
             pct_std = (pct_std-pct_std.mean())/pct_std.std() # pct_std estandarizado
-            a = pct_mean-pct_std*C # Se le da una calificación 
+            punt = pct_mean-pct_std*C # Se le da una calificación 
             
             # Se escogen los padres.
-            decisiones = np.concatenate((decisiones,m)) # agregamos los 'padres' de las nuevas generaciones a la lista. 
-            m = decisiones[np.argsort(a)[-int(n_vec//4):]] # se escojen los padres
-            pct_mean[-int(n_vec//4):] = pmr[np.argsort(a)[-int(n_vec//4):]] # se guarda la media que obtuvieron los padres  
-            pct_std[-int(n_vec//4):] = psr[np.argsort(a)[-int(n_vec//4):]] # se guarda la desviación que obtuvieron los padres 
+            decisiones = np.concatenate((decisiones,padres)) # agregamos los 'padres' de las nuevas generaciones a la lista. 
+            padres = decisiones[np.argsort(punt)[-int(n_vec//4):]] # se escojen los padres
+            pct_mean[-int(n_vec//4):] = pmr[np.argsort(punt)[-int(n_vec//4):]] # se guarda la media que obtuvieron los padres  
+            pct_std[-int(n_vec//4):] = psr[np.argsort(punt)[-int(n_vec//4):]] # se guarda la desviación que obtuvieron los padres 
             
-            hist_m[cic,:] = pmr #se almacena el promedio de los padres para observar avance generacional
-            hist_s[cic,:] = psr
-            hist_a[cic,:] = a
+            hist_mean[cic,:] = pmr #se almacena el promedio de los padres para observar avance generacional
+            hist_std[cic,:] = psr
+            hist_cal[cic,:] = punt
             
             # Se mutan los vectores de toma de decisiones
-            decisiones = np.array([[np.random.choice(m.T[i]) for i in range(l_vec)] for i in range(n_vec)])
+            decisiones = np.array([[np.random.choice(padres.T[i]) for i in range(l_vec)] for i in range(n_vec)])
             for k in range(n_vec): ## mutamos la cuarta parte de los dígitos de los n_vec vectores que tenemos. 
                 for i in range(int(l_vec//4)):
                     decisiones[k][np.random.randint(0,l_vec)] = np.random.randint(0,3)-1
@@ -370,14 +371,14 @@ class Genetico:
         
             # Cada 10 iteraciones se guardan los resultados de las simulaciones en un respaldo. 
             if cic % 10 == 0: 
-                m_hist.append(m)
-                pickle.dump([m,hist_m,hist_s,hist_a,m_hist],open('tmp.sav','wb'))
+                hist_padres.append(padres)
+                pickle.dump([padres,hist_mean,hist_std,hist_cal,hist_padres],open('tmp.sav','wb'))
             
-        print(m)
+        print(padres)
         print('tiempo de ejecución en seg.:')
         print(time()-t1)
         
-        pickle.dump([p,a,m,hist_m,hist_s,hist_a,m_hist],open(nombre + '.sav','wb')) # guarda las variables más importantes al finalizar. 
+        pickle.dump([punt,padres,hist_mean,hist_std,hist_cal,hist_padres],open(nombre + '.sav','wb')) # guarda las variables más importantes al finalizar. 
         
                 
         

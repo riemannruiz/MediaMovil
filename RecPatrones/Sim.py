@@ -31,12 +31,12 @@ for i in np.arange(len(csv)):
 #ndias = [3,5,8,13,21,34,55,89,144]
 ndias = [5,20,40,125]
 n_clusters = 4
-#%% Guardamos model_close en model_close3.sav
-nombre = 'model_close1'
+#%% Guardamos model_close en model_close.sav
+nombre = 'model_close'
 #k_clusters(csv, ndias, n_clusters, nombre)
 
 #%% Importamos model_close para futuro uso.
-model_close = pickle.load(open('model_close1.sav','rb'))
+model_close = pickle.load(open('model_close.sav','rb'))
 
 #%% Se crea vector de toma de decisiones para futuro uso
 Ud = np.random.randint(-1,2,len(model_close)**len(ndias))
@@ -46,26 +46,26 @@ Ud = np.random.randint(-1,2,len(model_close)**len(ndias))
 ###############################################################################
 
 #%% Simulamos
-#Vp = simulacion(csv,ndias,model_close,Ud)
+Vp = simulacion(csv,ndias,model_close,Ud)
 Rend =  np.diff(Vp) / Vp[:,:-1] #Rendimientos diarios.
 Port = Rend.mean(axis=0) #Creamos un portafolio con la misma cantidad de dinero en cada activo. 
-Mean = Port.mean()
-Std = Port.std()
-plt.scatter((Std*252)**0.5,Mean*252)
+Mean = Port.mean() #Se calcula el rendimiento esperado del portafolio y la estrategia aplicada
+Std = Port.std() #Se calcula la volatilidad diaria
+plt.scatter((Std*252)**0.5,Mean*252) #Se grafica la volatilidad anual contra el rendimiento anual. 
 
 #%%############################################################################
 #########################  Simulación para Graficar ###########################
 ###############################################################################
 
 #%% graficamos todas las simulaciones
-#Sim = grafico(csv,ndias,model_close,Ud)
+Sim = grafico(csv,ndias,model_close,Ud)
 
 #%%############################################################################
 ###################  Optimización por algorigmo genético ######################
 ###############################################################################
 
 #%% Simulamos
-l_vec = 512 # longitud de cada vector de toma de decisiones
+l_vec = len(model_close)**len(ndias) # longitud de cada vector de toma de decisiones
 n_vec = 16 # cantidad de vectores de toma de decisiones por generacion
 iteraciones = 5
 C = 0 
