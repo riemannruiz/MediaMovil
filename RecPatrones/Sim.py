@@ -65,14 +65,20 @@ Sim = grafico(csv,ndias,model_close,Ud)
 ###############################################################################
 
 #%% Simulamos
+csv = ['AMXL.MX','WALMEX.MX','TLEVISACPO.MX']
+for i in np.arange(len(csv)):
+    csv[i] = '../Data/%s.csv'%csv[i]
+
+
+
 l_vec = len(model_close)**len(ndias) # longitud de cada vector de toma de decisiones
-n_vec = 16 # cantidad de vectores de toma de decisiones por generacion
+n_vec = 4 # cantidad de vectores de toma de decisiones por generacion en potencias de 2. 
 iteraciones = 5
-C = 0 
+C = 0.5
 nombre = 'prueba'
 #####genetico(func,csv,ndias,model_close,l_vec,l_dec,iteraciones,C)
 genetico(simulacion,csv,ndias,model_close,l_vec,n_vec,iteraciones,C,nombre)
 
 #%%
-[p,a,m,hist_m,hist_s,hist_a,m_hist] = pickle.load(open(nombre + '.sav','rb'))
+[punt,padres,hist_mean,hist_std,hist_cal,hist_padres] = pickle.load(open(nombre + '.sav','rb'))
 
