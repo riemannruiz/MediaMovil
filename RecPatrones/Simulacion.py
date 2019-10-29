@@ -349,8 +349,8 @@ class Genetico:
                 #######################################################################
             
             # Se da una calificación a cada vector de toma de decisiones.
-            punt[pct_mean<pct_std] = pct_mean[pct_std>pct_mean]/pct_std[pct_std>pct_mean]
-#            punt = pct_mean-pct_std*C # Se le da una calificación (Vector de calificaciones)
+            punt[pct_mean<pct_std] = pct_mean[pct_std>pct_mean] -0.5*C*pct_std[pct_std>pct_mean]
+#            punt = pct_mean-C*pct_std # Se le da una calificación (Vector de calificaciones)
             
             # Se escogen los padres.
             decisiones = np.concatenate((decisiones,padres)) # agregamos los 'padres' de las nuevas generaciones a la lista. 

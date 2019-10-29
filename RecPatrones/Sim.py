@@ -29,6 +29,7 @@ for i in np.arange(len(csv)):
     csv[i] = '../Data/%s.csv'%csv[i]
 
 #ndias = [3,5,8,13,21,34,55,89,144]
+#n_clusters = 2
 ndias = [5,20,40,125]
 n_clusters = 4
 #%% Guardamos model_close en model_close.sav
@@ -73,8 +74,8 @@ model_close = pickle.load(open('model_close.sav','rb'))
 l_vec = len(model_close)**len(ndias) # longitud de cada vector de toma de decisiones
 n_vec = 32 # cantidad de vectores de toma de decisiones por generacion en potencias de 2. 
 iteraciones = 200
-C = 1 # aumenta o disminuye la pena a la volatilidad cuando se utiliza J = mean-C*std. C tiene que ser > 0
-nombre = 'Intento1'
+C = 1/250 # aumenta o disminuye la pena a la volatilidad cuando se utiliza J = mean-C*std. C tiene que ser > 0
+nombre = 'Intento2'
 #####genetico(func,csv,ndias,model_close,l_vec,l_dec,iteraciones,C)
 genetico(simulacion,csv,ndias,model_close,l_vec,n_vec,iteraciones,C,nombre)
 
