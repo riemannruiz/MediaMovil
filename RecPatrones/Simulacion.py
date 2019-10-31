@@ -305,7 +305,7 @@ class Graficos:
 
 
 class Genetico:
-    def genetico(func,csv,ndias,model_close,l_vec,n_vec,iteraciones,C,nombre):
+    def genetico(func,csv,ndias,model_close,l_vec,n_vec,iteraciones,C,rf,nombre):
         import numpy as np
         from time import time
         import pickle
@@ -349,7 +349,7 @@ class Genetico:
                 #######################################################################
             
             # Se da una calificación a cada vector de toma de decisiones.
-            punt[pct_mean<pct_std] = pct_mean[pct_std>pct_mean] -0.5*C*pct_std[pct_std>pct_mean]
+            punt[pct_mean<pct_std] = (pct_mean[pct_std>pct_mean]-rf/252)/pct_std[pct_std>pct_mean]
 #            punt = pct_mean-C*pct_std # Se le da una calificación (Vector de calificaciones)
             
             # Se escogen los padres.
