@@ -78,9 +78,9 @@ n_vec = 64 # cantidad de vectores de toma de decisiones por generacion en potenc
 iteraciones = 200
 C = 1 # aumenta o disminuye la pena a la volatilidad cuando se utiliza J = mean-C*std. C tiene que ser > 0
 rf = 0.046 # Tasa libre de riesgo promedio del periodo de entrenamiento 
-nombre = 'Intento3'
+nombre = 'Intento2'
 #####genetico(func,csv,ndias,model_close,l_vec,l_dec,iteraciones,C)
-genetico(simulacion,csv,ndias,model_close,l_vec,n_vec,iteraciones,C,nombre)
+genetico(simulacion,csv,ndias,model_close,l_vec,n_vec,iteraciones,C,rf,nombre)
 
 #%%
 [punt,padres,hist_mean,hist_std,hist_cal,hist_padres] = pickle.load(open(nombre + '.sav','rb'))
