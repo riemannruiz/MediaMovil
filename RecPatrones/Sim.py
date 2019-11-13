@@ -28,7 +28,7 @@ csv = ['AMXL.MX','WALMEX.MX','TLEVISACPO.MX','GMEXICOB.MX','GFNORTEO.MX','CEMEXC
 for i in np.arange(len(csv)):
     csv[i] = '../Train/%s.csv'%csv[i] # Se utilizan datos hasta inicios de 2019. El resto del año queda para probar el modelo. 
 #    csv[i] = '../Test/%s.csv'%csv[i] #Se utilizan todos los datos para hacer las pruebas
-
+cetes = 'cetes_diarios.csv'
 
 #ndias = [3,5,8,13,21,34,55,89,144]
 #n_clusters = 2
@@ -49,7 +49,7 @@ Ud = np.random.randint(-1,2,len(model_close)**len(ndias))
 ###############################################################################
 
 #%% Simulamos
-#Vp = simulacion(csv,ndias,model_close,Ud)
+Vp = simulacion(csv,ndias,model_close,Ud,cetes)
 
 
 #%% Calculamos y graficamos algunos datos sobre el desempeño general
