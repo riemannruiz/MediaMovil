@@ -97,7 +97,7 @@ class Optimizacion:
         
         Sim = np.zeros((len(data),len(sit[0])))
         for i in range(len(data)):
-            Sim[i] = portafolio_sim(data[i].Close[-len(sit[0]):],sit[i],Ud,cetes[-len(sit[0]):])
+            Sim[i] = portafolio_sim(data[i].Close[-len(sit[0]):],sit[i],Ud,cetes[-len(sit[0]):].values)
             
         return(Sim)
     
@@ -124,7 +124,7 @@ class Optimizacion:
     
         # Creamos vector de cetes en capitalización diaria. 
         cetes_diarios = pd.read_csv(cetes,index_col=0)
-        cetes = pd.Series([(cetes_diarios.loc[data[0].index[i],:].CETES28+1)**(1/252)-1 for i in range(len(data[0].index))])
+        cetes = pd.Series([cetes_diarios.loc[data[0].index[i],:].CETES28 for i in range(len(data[0].index))])
 
         # Se estandarizan los datos
         cont = len(ndias)    
@@ -177,16 +177,16 @@ class Graficos:
             dat_new[:,k] = data[k:(n_data-n_ventana+1)+k]
         return dat_new
 
-    def portafolio(x,u,p,rcom):
+    def portafolio(x,u,p,i,rcom):
         x_1 = x;
         vp = x[0]+p*x[1] #Valor presente del portafolios
-        x_1[0] = x[0]-p*u-rcom*p*abs(u) #Dinero disponible
+        x_1[0] = x[0]*(1+i)-p*u-rcom*p*abs(u) #Dinero disponible
         x_1[1] = x[1]+u #Acciones disponibles
         return vp,x_1
     
     
     #% Función para realizar la simulación del portafolio
-    def portafolio_sim(precio,sit,Ud):
+    def portafolio_sim(precio,sit,Ud,cetes):
         import numpy as np
         from Simulacion import Graficos
         portafolio = Graficos.portafolio
@@ -209,22 +209,22 @@ class Graficos:
             else:
                 u[t] = u_min*Ud[int(sit[t])]
             
-            Vp[t],X[t+1]=portafolio(X[t],u[t],precio[t],rcom)
+            Vp[t],X[t+1]=portafolio(X[t],u[t],precio[t],cetes[t],rcom)
         
         return T,Vp,X,u
 
-    def portafolios_sim(data,sit,Ud):
+    def portafolios_sim(data,sit,Ud,cetes):
         import numpy as np
         from Simulacion import Graficos
         portafolio_sim = Graficos.portafolio_sim
         
         Sim = []
         for i in range(len(data)):
-            Sim.append(portafolio_sim(data[i].Close[-len(sit[0]):],sit[i],Ud))
+            Sim.append(portafolio_sim(data[i].Close[-len(sit[0]):],sit[i],Ud,cetes[-len(sit[0]):].values))
             
         return(np.array(Sim))
     
-    def simulacion(csv,ndias,model_close,Ud): 
+    def simulacion(csv,ndias,model_close,Ud,cetes): 
         import numpy as np
         import pandas as pd
         from Simulacion import Graficos
@@ -245,7 +245,11 @@ class Graficos:
             for i in ndias:
                 ven.append(crear_ventanas(j['Close'].dropna(),i))  # IMPORTANTE!! Se asume que las bases de datos siempre recibiran el nombre de una columna 'Close'
             vent.append(ven)
-    
+            
+        # Creamos vector de cetes en capitalización diaria. 
+        cetes_diarios = pd.read_csv(cetes,index_col=0)
+        cetes = pd.Series([cetes_diarios.loc[data[0].index[i],:].CETES28 for i in range(len(data[0].index))])
+
         # Se estandarizan los datos
         cont = len(ndias)   
         norm = []
@@ -279,7 +283,7 @@ class Graficos:
             sit.append(s1)
     
         # Simulamos
-        Sim = portafolios_sim(data,sit,Ud)
+        Sim = portafolios_sim(data,sit,Ud,cetes)
      
         
         for i in range(len(Sim)): 
