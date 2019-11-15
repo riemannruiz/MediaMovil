@@ -314,7 +314,7 @@ class Graficos:
 
 
 class Genetico:
-    def genetico(func,csv,ndias,model_close,l_vec,n_vec,iteraciones,C,rf,nombre):
+    def genetico(func,csv,cetes,ndias,model_close,l_vec,n_vec,iteraciones,C,rf,nombre):
         import numpy as np
         from time import time
         import pickle
@@ -350,7 +350,7 @@ class Genetico:
             for i in np.arange(n_vec): ## se simulan todos vectores de decisión para escoger el que de la suma mayor
                 
                 #######################################################################
-                Sim = func(csv,ndias,model_close,decisiones[i]) #########################
+                Sim = func(csv,ndias,model_close,decisiones[i],cetes) #########################
                 pct = Sim[:,1:]/Sim[:,:-1]-1 ##########################################
                 pct = pct.mean(axis=0) ##############################################
                 pct_mean[i] = pct.mean() ########################################## todas las empresas
