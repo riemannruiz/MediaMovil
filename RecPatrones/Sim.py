@@ -26,8 +26,8 @@ k_clusters = Kclusters.k_clusters
 #%% Datos en csv
 csv = ['AMXL.MX','WALMEX.MX','TLEVISACPO.MX','GMEXICOB.MX','GFNORTEO.MX','CEMEXCPO.MX','PENOLES.MX','GFINBURO.MX','ELEKTRA.MX','BIMBOA.MX','AC.MX','KIMBERA.MX','LABB.MX','LIVEPOL1.MX','ASURB.MX','GAPB.MX','ALPEKA.MX','GRUMAB.MX','ALSEA.MX','GCARSOA1.MX','PINFRA.MX']
 for i in np.arange(len(csv)):
-#    csv[i] = '../Train/%s.csv'%csv[i] # Se utilizan datos hasta inicios de 2019. El resto del año queda para probar el modelo. 
-    csv[i] = '../Test/%s.csv'%csv[i] #Se utilizan todos los datos para hacer las pruebas
+    csv[i] = '../Train/%s.csv'%csv[i] # Se utilizan datos hasta inicios de 2019. El resto del año queda para probar el modelo. 
+#    csv[i] = '../Test/%s.csv'%csv[i] #Se utilizan todos los datos para hacer las pruebas
 cetes = 'cetes_diarios.csv'
 
 #ndias = [3,5,8,13,21,34,55,89,144]
@@ -42,8 +42,8 @@ nombre = 'model_close'
 model_close = pickle.load(open('model_close.sav','rb'))
 
 #%% Se crea vector de toma de decisiones para futuro uso
-Ud = np.random.randint(-1,2,len(model_close)**len(ndias))
-
+#Ud = np.random.randint(-1,2,len(model_close)**len(ndias))
+Ud = np.zeros(len(model_close)**len(ndias))
 #%%############################################################################
 ######################  Simulación para optimización ##########################
 ###############################################################################
@@ -54,19 +54,19 @@ Vp = simulacion(csv,ndias,model_close,Ud,cetes)
 
 
 #%% Calculamos y graficamos algunos datos sobre el desempeño general
-#Rend =  np.diff(Vp) / Vp[:,:-1] #Rendimientos diarios.
-#Port = Rend.mean(axis=0) #Creamos un portafolio con la misma cantidad de dinero en cada activo. 
-#Mean = Port.mean() #Se calcula el rendimiento esperado del portafolio y la estrategia aplicada
-#Std = Port.std() #Se calcula la volatilidad diaria
-#plt.scatter((Std*252)**0.5,Mean*252) #Se grafica la volatilidad anual contra el rendimiento anual. 
+Rend =  np.diff(Vp) / Vp[:,:-1] #Rendimientos diarios.
+Port = Rend.mean(axis=0) #Creamos un portafolio con la misma cantidad de dinero en cada activo. 
+Mean = Port.mean() #Se calcula el rendimiento esperado del portafolio y la estrategia aplicada
+Std = Port.std() #Se calcula la volatilidad diaria
+plt.scatter((Std*252)**0.5,Mean*252) #Se grafica la volatilidad anual contra el rendimiento anual. 
 
 #%%############################################################################
 #########################  Simulación para Graficar ###########################
 ###############################################################################
 
 #%% graficamos todas las simulaciones
-#Sim = grafico(csv,ndias,model_close,Ud,cetes)
-Sim = grafico(csv,ndias,model_close,padres[-1],cetes)
+Sim = grafico(csv,ndias,model_close,Ud,cetes)
+#Sim = grafico(csv,ndias,model_close,padres[-1],cetes)
 
 #%%############################################################################
 ###################  Optimización por algorigmo genético ######################
@@ -75,13 +75,13 @@ Sim = grafico(csv,ndias,model_close,padres[-1],cetes)
 #%% Simulamos
 
 l_vec = len(model_close)**len(ndias) # longitud de cada vector de toma de decisiones
-n_vec = 64 # cantidad de vectores de toma de decisiones por generacion en potencias de 2. 
-iteraciones = 200
+n_vec = 4 # cantidad de vectores de toma de decisiones por generacion en potencias de 2. 
+iteraciones = 2
 C = 1 # aumenta o disminuye la pena a la volatilidad cuando se utiliza J = mean-C*std. C tiene que ser > 0
-rf = 0.046 # Tasa libre de riesgo promedio del periodo de entrenamiento 
-nombre = 'Intento2'
+rf = 0.0471 # Tasa libre de riesgo (real, anual) promedio del periodo de entrenamiento 
+nombre = 'Intento3'
 #####genetico(func,csv,ndias,model_close,l_vec,l_dec,iteraciones,C)
-#genetico(simulacion,csv,ndias,model_close,l_vec,n_vec,iteraciones,C,rf,nombre)
+genetico(simulacion,csv,cetes,ndias,model_close,l_vec,n_vec,iteraciones,C,rf,nombre)
 
 #%%
 [punt,padres,hist_mean,hist_std,hist_cal,hist_padres] = pickle.load(open(nombre + '.sav','rb'))
