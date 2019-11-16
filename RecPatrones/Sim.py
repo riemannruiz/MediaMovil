@@ -26,8 +26,8 @@ k_clusters = Kclusters.k_clusters
 #%% Datos en csv
 csv = ['AMXL.MX','WALMEX.MX','TLEVISACPO.MX','GMEXICOB.MX','GFNORTEO.MX','CEMEXCPO.MX','PENOLES.MX','GFINBURO.MX','ELEKTRA.MX','BIMBOA.MX','AC.MX','KIMBERA.MX','LABB.MX','LIVEPOL1.MX','ASURB.MX','GAPB.MX','ALPEKA.MX','GRUMAB.MX','ALSEA.MX','GCARSOA1.MX','PINFRA.MX']
 for i in np.arange(len(csv)):
-    csv[i] = '../Train/%s.csv'%csv[i] # Se utilizan datos hasta inicios de 2019. El resto del año queda para probar el modelo. 
-#    csv[i] = '../Test/%s.csv'%csv[i] #Se utilizan todos los datos para hacer las pruebas
+#    csv[i] = '../Train/%s.csv'%csv[i] # Se utilizan datos hasta inicios de 2019. El resto del año queda para probar el modelo. 
+    csv[i] = '../Test/%s.csv'%csv[i] #Se utilizan todos los datos para hacer las pruebas
 cetes = 'cetes_diarios.csv'
 
 #ndias = [3,5,8,13,21,34,55,89,144]
@@ -49,9 +49,9 @@ Ud = np.zeros(len(model_close)**len(ndias))
 ###############################################################################
 
 #%% Simulamos
-Vp = simulacion(csv,ndias,model_close,Ud,cetes)
-
-
+#Vp = simulacion(csv,ndias,model_close,Ud,cetes)
+Vp = simulacion(csv,ndias,model_close,padres[-4],cetes)
+#Vp = simulacion(csv,ndias,model_close,np.ones(Ud.shape),cetes)
 
 #%% Calculamos y graficamos algunos datos sobre el desempeño general
 Rend =  np.diff(Vp) / Vp[:,:-1] #Rendimientos diarios.
@@ -60,13 +60,18 @@ Mean = Port.mean() #Se calcula el rendimiento esperado del portafolio y la estra
 Std = Port.std() #Se calcula la volatilidad diaria
 plt.scatter((Std*252)**0.5,Mean*252) #Se grafica la volatilidad anual contra el rendimiento anual. 
 
+
+#%% Graficamos los ultimos n datos
+ult = 176
+plt.plot(Vp[:,-ult:].T/Vp[:,-ult]) #Se grafica el comportamiento en el periodo desconocido (ult dias)
+np.mean(Vp[:,-1].T/Vp[:,-ult]) #rendimiento promedio en periodo desconocido
 #%%############################################################################
 #########################  Simulación para Graficar ###########################
 ###############################################################################
 
 #%% graficamos todas las simulaciones
-Sim = grafico(csv,ndias,model_close,Ud,cetes)
-#Sim = grafico(csv,ndias,model_close,padres[-1],cetes)
+#Sim = grafico(csv,ndias,model_close,Ud,cetes)
+Sim = grafico(csv,ndias,model_close,padres[-1],cetes)
 
 #%%############################################################################
 ###################  Optimización por algorigmo genético ######################
@@ -75,8 +80,8 @@ Sim = grafico(csv,ndias,model_close,Ud,cetes)
 #%% Simulamos
 
 l_vec = len(model_close)**len(ndias) # longitud de cada vector de toma de decisiones
-n_vec = 4 # cantidad de vectores de toma de decisiones por generacion en potencias de 2. 
-iteraciones = 2
+n_vec = 32 # cantidad de vectores de toma de decisiones por generacion en potencias de 2. 
+iteraciones = 200
 C = 1 # aumenta o disminuye la pena a la volatilidad cuando se utiliza J = mean-C*std. C tiene que ser > 0
 rf = 0.0471 # Tasa libre de riesgo (real, anual) promedio del periodo de entrenamiento 
 nombre = 'Intento3'
