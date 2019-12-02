@@ -81,7 +81,8 @@ for i in np.arange(gen)+1:
         shpe2 = (mean2-rf)/std2
         Vals[cont,:] = [mean1,mean2,std1,std2,shpe1,shpe2]
         cont += 1
-        
+
+#%%
 pickle.dump(Vals, open('Vals.sav','wb'))  
 
 
