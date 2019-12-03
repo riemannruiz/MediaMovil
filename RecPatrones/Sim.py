@@ -86,7 +86,7 @@ C = 1 # aumenta o disminuye la pena a la volatilidad cuando se utiliza J = mean-
 rf = 0.0471 # Tasa libre de riesgo (real, anual) promedio del periodo de entrenamiento 
 nombre = 'Intento3'
 #####genetico(func,csv,ndias,model_close,l_vec,l_dec,iteraciones,C)
-genetico(simulacion,csv,cetes,ndias,model_close,l_vec,n_vec,iteraciones,C,rf,nombre)
+#genetico(simulacion,csv,cetes,ndias,model_close,l_vec,n_vec,iteraciones,C,rf,nombre)
 
 #%%
 [punt,padres,hist_mean,hist_std,hist_cal,hist_padres] = pickle.load(open(nombre + '.sav','rb'))
