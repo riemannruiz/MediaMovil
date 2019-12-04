@@ -29,7 +29,7 @@ nombre = 'model_close'
 model_close = pickle.load(open('model_close.sav','rb'))
 
 #%%
-nombre = 'Intento3'
+nombre = 'Intento3_2'
 [punt,padres,hist_mean,hist_std,hist_cal,hist_padres] = pickle.load(open(nombre + '.sav','rb'))
 
 #%%
@@ -62,29 +62,29 @@ gen = 5
 
 #%%
 
-Vals = np.zeros((len(hist_padres[0])*gen,6))
-cont = 0 
-for i in np.arange(gen)+1: 
-    for j in range(len(hist_padres[0])):
-        Vp = simulacion(csv,ndias,model_close,hist_padres[-i][-j],cetes)
-        plt.plot(Vp[:,-ult:-1].T/Vp[:,-ult].T) # Grafica el comportamiento de nuestro padre en cada uno de los activos
-        plt.plot(np.mean(Vp[:,-ult:-1].T/Vp[:,-ult].T,axis=1)) #Grafica el comportamiento de nuestro padre en todo el portafolio
-
-        pct =  (Vp[:,1:]/Vp[:,0:-1]-1)
-        g_pct =  pct.mean(axis=0)
-        
-        mean1 = g_pct[:-ult].mean()
-        mean2 = g_pct[-ult:].mean()
-        std1 = g_pct[:-ult].std()
-        std2 = g_pct[-ult:].std()
-        shpe1 = (mean1-rf)/std1
-        shpe2 = (mean2-rf)/std2
-        Vals[cont,:] = [mean1,mean2,std1,std2,shpe1,shpe2]
-        cont += 1
+#Vals = np.zeros((len(hist_padres[0])*gen,6))
+#cont = 0 
+#for i in np.arange(gen)+1: 
+#    for j in range(len(hist_padres[0])):
+#        Vp = simulacion(csv,ndias,model_close,hist_padres[-i][-j],cetes)
+#        plt.plot(Vp[:,-ult:-1].T/Vp[:,-ult].T) # Grafica el comportamiento de nuestro padre en cada uno de los activos
+#        plt.plot(np.mean(Vp[:,-ult:-1].T/Vp[:,-ult].T,axis=1)) #Grafica el comportamiento de nuestro padre en todo el portafolio
+#
+#        pct =  (Vp[:,1:]/Vp[:,0:-1]-1)
+#        g_pct =  pct.mean(axis=0)
+#        
+#        mean1 = g_pct[:-ult].mean()
+#        mean2 = g_pct[-ult:].mean()
+#        std1 = g_pct[:-ult].std()
+#        std2 = g_pct[-ult:].std()
+#        shpe1 = (mean1-rf)/std1
+#        shpe2 = (mean2-rf)/std2
+#        Vals[cont,:] = [mean1,mean2,std1,std2,shpe1,shpe2]
+#        cont += 1
 
 #%%
-pickle.dump(Vals, open('Vals.sav','wb'))  
-
+#pickle.dump(Vals, open('Vals.sav','wb'))  
+pickle.load(open('Vals.sav','rb'))
 
 
 
