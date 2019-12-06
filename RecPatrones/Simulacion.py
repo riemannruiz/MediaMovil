@@ -334,6 +334,7 @@ class Genetico:
         
         t1 = time()        
         decisiones = np.random.randint(-1,2,(n_vec,l_vec)) # Inicial. 
+        decisiones[-len(C0):] = C0
         
         hist_mean = np.zeros((iteraciones,n_vec//4*5)) # historial de media
         hist_std = np.zeros((iteraciones,n_vec//4*5)) # historial de desviación estandar
@@ -342,7 +343,6 @@ class Genetico:
         
         punt = np.zeros(n_vec//4*5) # puntuaciones de hijos, se sobre-escribe en cada ciclo
         padres = np.zeros((n_vec//4,l_vec)) # padres, se sobre-escribe en cada ciclo
-        padres[-len(C0):] = C0
         
         #Para castigar y premiar baja desviación de rendimientos. 
         pct_mean = np.zeros(punt.shape)
