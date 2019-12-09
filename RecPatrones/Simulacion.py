@@ -314,20 +314,27 @@ class Graficos:
 
 
 class Genetico:
-    def genetico(func,csv,cetes,ndias,model_close,l_vec,n_vec,iteraciones,C,rf,nombre):
+    def genetico(func,C0,csv,cetes,ndias,model_close,l_vec,n_vec,iteraciones,C,rf,nombre):
         import numpy as np
         from time import time
         import pickle
         
         #func = función a optimizar, esta deberá dar los resultados del vector de decisiones en todas las empresas probadas. 
-        #args = argumentos de la función a optimizar.
+        #C0 = Condicion inicial de los padres. (len(C0)<nvec)
+        #csv = datos sobre los cuales se simulará
+        #cetes = datos diarios de tasa de interés para el dinero no invertido en activos.
+        #ndias = vector, dias en los que se hacen clusters de los datos para reconocimiento de patrones.
+        #model_close = modelo de reconocimiento de patrones con la información de clusters entrenados.
         #l_vec = longitud de vector de toma de decisiones, en potencias de 2
         #n_vec = cantidad de vectores de toma de decisiones, en potencias de 2.
         #iteraciones = número de ciclos completos que dará el algorítmo genético.
         #C = multiplicador de castigo por desviación estándar
+        #rf = tasa libre de riesgo para optimización con respecto al ratio de Sharpe.
+        #nombre = texto, nombre que tendrá el archivo en dónde se guardarán los resultados del AG. 
         
         t1 = time()        
         decisiones = np.random.randint(-1,2,(n_vec,l_vec)) # Inicial. 
+        decisiones[-len(C0):] = C0
         
         hist_mean = np.zeros((iteraciones,n_vec//4*5)) # historial de media
         hist_std = np.zeros((iteraciones,n_vec//4*5)) # historial de desviación estandar
@@ -382,7 +389,7 @@ class Genetico:
             print((np.ceil((1+cic)/iteraciones*1000)/10,time()-t2))
             
             # Cada 10 iteraciones se guardan los resultados de las simulaciones en un respaldo. 
-            resp = 10 #respaldo a cada resp
+            resp = 5 #respaldo a cada resp
             if cic % resp == 0: 
                 hist_padres.append(padres)
                 pickle.dump([punt,padres,hist_mean,hist_std,hist_cal,hist_padres],open('tmp.sav','wb'))
